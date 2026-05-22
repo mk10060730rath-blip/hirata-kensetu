@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>株式会社平田建設 | 地域の暮らしを支える建設会社</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      color: #1a1a1a;
+      background: #fff;
+      line-height: 1.7;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    ul { list-style: none; }
+
+    /* ===== HEADER ===== */
+    #header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      transition: box-shadow 0.3s;
+    }
+    #header.scrolled { box-shadow: 0 2px 12px rgba(0,0,0,0.10); }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-mark {
+      width: 44px; height: 44px;
+      background: #1a1a1a;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 2px;
+    }
+    .logo-mark span {
+      color: #fff;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+    .logo-text { line-height: 1.2; }
+    .logo-text .company-ja {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #1a1a1a;
+    }
+    .logo-text .company-en {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: #888;
+      text-transform: uppercase;
+    }
+
+    /* ===== GLOBAL NAV ===== */
+    .global-nav { display: flex; align-items: center; height: 72px; }
+    .global-nav > ul { display: flex; height: 100%; }
+    .global-nav > ul > li {
+      position: relative;
+      height: 100%;
+    }
+    .global-nav > ul > li > a {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0 18px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: #1a1a1a;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .global-nav > ul > li > a:hover,
+    .global-nav > ul > li:hover > a { color: #c8302a; }
+
+    /* Dropdown */
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 72px; left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      border-top: 3px solid #c8302a;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      min-width: 200px;
+      z-index: 999;
+    }
+    .global-nav > ul > li:hover .dropdown { display: block; }
+    .dropdown li a {
+      display: block;
+      padding: 12px 20px;
+      font-size: 13px;
+      color: #333;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.15s, color 0.15s;
+    }
+    .dropdown li a:hover { background: #f8f0f0; color: #c8302a; }
+
+    .header-cta {
+      margin-left: 20px;
+    }
+    .btn-contact {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      background: #c8302a;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .btn-contact:hover { background: #a8241f; }
+
+    /* ===== HAMBURGER ===== */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: #1a1a1a;
+      transition: all 0.3s;
+    }
+
+    /* ===== HERO ===== */
+    #hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      overflow: hidden;
+      margin-top: 72px;
+    }
+    .hero-slides { height: 100%; position: relative; }
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+    .hero-slide.active { opacity: 1; }
+    .hero-slide-bg {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.55);
+    }
+
+    /* SVG placeholders for hero (since we can't load external images) */
+    .hero-slide-bg-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .hero-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 80px;
+    }
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero-title-ja {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.3;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+    }
+    .hero-title-ja span { color: #e8a020; }
+    .hero-sub {
+      font-size: clamp(14px, 1.8vw, 18px);
+      color: rgba(255,255,255,0.85);
+      max-width: 500px;
+      margin-bottom: 40px;
+      line-height: 1.8;
+    }
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 32px;
+      background: #c8302a;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      transition: background 0.2s, gap 0.2s;
+      width: fit-content;
+    }
+    .hero-btn:hover { background: #a8241f; gap: 18px; }
+    .hero-btn::after { content: '→'; font-size: 16px; }
+
+    /* Slide indicators */
+    .hero-indicators {
+      position: absolute;
+      bottom: 36px;
+      left: 80px;
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    .hero-dot {
+      width: 32px; height: 3px;
+      background: rgba(255,255,255,0.35);
+      cursor: pointer;
+      transition: background 0.3s, width 0.3s;
+    }
+    .hero-dot.active { background: #e8a020; width: 48px; }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      right: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.6);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: rgba(255,255,255,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .scroll-line::after {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.8);
+      animation: scrollDown 2s infinite;
+    }
+    @keyframes scrollDown {
+      0% { top: -100%; }
+      100% { top: 100%; }
+    }
+
+    /* ===== SECTION COMMON ===== */
+    .section { padding: 100px 0; }
+    .section-inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+    .section-header { margin-bottom: 56px; }
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #c8302a;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(24px, 3.5vw, 36px);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      line-height: 1.3;
+      color: #1a1a1a;
+    }
+    .section-title-en {
+      font-size: 13px;
+      color: #aaa;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    /* ===== NEWS TICKER ===== */
+    #news-ticker {
+      background: #1a1a1a;
+      color: #fff;
+      padding: 0;
+    }
+    .ticker-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+      align-items: stretch;
+      min-height: 52px;
+    }
+    .ticker-label {
+      background: #c8302a;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .ticker-scroll {
+      overflow: hidden;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+    }
+    .ticker-track {
+      display: flex;
+      gap: 60px;
+      animation: tickerMove 25s linear infinite;
+      white-space: nowrap;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes tickerMove {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+    }
+    .ticker-date {
+      color: #e8a020;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .ticker-item a { color: rgba(255,255,255,0.85); transition: color 0.2s; }
+    .ticker-item a:hover { color: #e8a020; }
+
+    /* ===== ABOUT ===== */
+    #about { background: #fafafa; }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .about-visual {
+      position: relative;
+    }
+    .about-img-main {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: #2a2a2a;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-img-accent {
+      position: absolute;
+      bottom: -24px;
+      right: -24px;
+      width: 45%;
+      aspect-ratio: 1;
+      background: #c8302a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .about-accent-text {
+      color: #fff;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .about-accent-text .year {
+      font-size: 40px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+    .about-accent-text .year-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      opacity: 0.85;
+    }
+    .about-lead {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #c8302a;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .about-catch {
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 900;
+      line-height: 1.5;
+      color: #1a1a1a;
+      margin-bottom: 28px;
+      letter-spacing: 0.04em;
+    }
+    .about-body {
+      font-size: 15px;
+      color: #555;
+      line-height: 2;
+      margin-bottom: 40px;
+    }
+    .about-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border: 2px solid #1a1a1a;
+      color: #1a1a1a;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      transition: all 0.25s;
+    }
+    .about-btn:hover {
+      background: #1a1a1a;
+      color: #fff;
+      gap: 16px;
+    }
+    .about-btn::after { content: '→'; }
+
+    /* ===== SERVICES ===== */
+    #services { background: #fff; }
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .service-card {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      cursor: pointer;
+      background: #1a1a1a;
+    }
+    .service-card-bg {
+      width: 100%; height: 100%;
+      transition: transform 0.5s ease;
+    }
+    .service-card:hover .service-card-bg { transform: scale(1.06); }
+    .service-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 28px;
+      transition: background 0.3s;
+    }
+    .service-card:hover .service-overlay {
+      background: linear-gradient(to top, rgba(180,40,30,0.9) 0%, rgba(180,40,30,0.4) 60%, transparent 100%);
+    }
+    .service-num {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 8px;
+    }
+    .service-name {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .service-name-en {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+    }
+    .service-arrow {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      width: 36px; height: 36px;
+      border: 1px solid rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.8);
+      font-size: 14px;
+      transition: all 0.25s;
+    }
+    .service-card:hover .service-arrow {
+      background: #fff;
+      color: #c8302a;
+      border-color: #fff;
+    }
+
+    /* ===== NUMBERS ===== */
+    #numbers { background: #1a1a1a; color: #fff; }
+    .numbers-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: #333;
+    }
+    .number-item {
+      background: #1a1a1a;
+      padding: 48px 32px;
+      text-align: center;
+      transition: background 0.25s;
+    }
+    .number-item:hover { background: #242424; }
+    .number-val {
+      font-size: clamp(40px, 5vw, 60px);
+      font-weight: 900;
+      color: #e8a020;
+      line-height: 1;
+      letter-spacing: -2px;
+      margin-bottom: 8px;
+    }
+    .number-unit {
+      font-size: 18px;
+      color: #e8a020;
+    }
+    .number-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.08em;
+      line-height: 1.6;
+    }
+    .number-label-en {
+      font-size: 10px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ===== WORKS ===== */
+    #works { background: #f5f5f5; }
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+    .work-card {
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .work-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    }
+    .work-img {
+      aspect-ratio: 16/9;
+      background: #ddd;
+      position: relative;
+      overflow: hidden;
+    }
+    .work-img-inner {
+      width: 100%; height: 100%;
+      transition: transform 0.4s;
+    }
+    .work-card:hover .work-img-inner { transform: scale(1.04); }
+    .work-tag {
+      position: absolute;
+      top: 12px; left: 12px;
+      background: #c8302a;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      letter-spacing: 0.08em;
+    }
+    .work-body { padding: 20px; }
+    .work-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+    .work-meta {
+      font-size: 12px;
+      color: #888;
+      letter-spacing: 0.04em;
+    }
+
+    .section-more {
+      text-align: center;
+    }
+    .btn-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 36px;
+      border: 2px solid #1a1a1a;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      transition: all 0.25s;
+    }
+    .btn-more:hover { background: #1a1a1a; color: #fff; gap: 16px; }
+    .btn-more::after { content: '→'; }
+
+    /* ===== COMPANY INFO ===== */
+    #company { background: #fff; }
+    .company-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .info-table { width: 100%; border-collapse: collapse; }
+    .info-table tr {
+      border-bottom: 1px solid #eee;
+    }
+    .info-table th {
+      padding: 16px 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: #888;
+      letter-spacing: 0.06em;
+      width: 130px;
+      vertical-align: top;
+      text-align: left;
+    }
+    .info-table td {
+      padding: 16px 0;
+      font-size: 14px;
+      color: #333;
+      line-height: 1.8;
+    }
+    .info-table td a { color: #c8302a; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+    .info-table td a:hover { border-color: #c8302a; }
+
+    .company-map-area { }
+    .company-map-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 16px;
+    }
+    .map-placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: #e8e8e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .map-placeholder iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .company-access {
+      margin-top: 20px;
+      padding: 16px 20px;
+      background: #f8f8f8;
+      border-left: 3px solid #c8302a;
+    }
+    .company-access p {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.9;
+    }
+    .company-access strong { color: #1a1a1a; }
+
+    /* ===== CERTIFICATION ===== */
+    #certification { background: #fafafa; }
+    .cert-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .cert-item {
+      background: #fff;
+      padding: 28px;
+      border: 1px solid #eee;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .cert-item:hover {
+      border-color: #c8302a;
+      box-shadow: 0 4px 16px rgba(200,48,42,0.08);
+    }
+    .cert-icon {
+      width: 40px; height: 40px;
+      background: #c8302a;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .cert-icon svg { width: 20px; height: 20px; fill: #fff; }
+    .cert-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+    .cert-detail {
+      font-size: 12px;
+      color: #888;
+      line-height: 1.7;
+    }
+
+    /* ===== CONTACT CTA ===== */
+    #contact-cta {
+      background: #1a1a1a;
+      position: relative;
+      overflow: hidden;
+    }
+    #contact-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 40px,
+        rgba(255,255,255,0.02) 40px,
+        rgba(255,255,255,0.02) 80px
+      );
+    }
+    .cta-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .cta-label {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #e8a020;
+      margin-bottom: 16px;
+    }
+    .cta-title {
+      font-size: clamp(26px, 3.5vw, 38px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.4;
+      letter-spacing: 0.04em;
+    }
+    .cta-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.9;
+      margin-top: 16px;
+    }
+    .cta-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .cta-tel-block {
+      padding: 24px 28px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .cta-tel-label {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .cta-tel {
+      font-size: 32px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .cta-tel a { color: #fff; }
+    .cta-tel-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      margin-top: 4px;
+    }
+    .btn-form {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 28px;
+      background: #c8302a;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      transition: background 0.2s;
+    }
+    .btn-form:hover { background: #a8241f; }
+    .btn-form::after { content: '→'; font-size: 18px; }
+
+    /* ===== FOOTER ===== */
+    #footer { background: #111; color: rgba(255,255,255,0.75); }
+    .footer-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 40px 48px;
+      display: grid;
+      grid-template-columns: 280px 1fr 1fr 1fr;
+      gap: 48px;
+    }
+    .footer-brand .logo-mark { background: #c8302a; }
+    .footer-company-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+    .footer-address {
+      font-size: 12px;
+      line-height: 2;
+      color: rgba(255,255,255,0.5);
+    }
+    .footer-nav-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .footer-nav li { margin-bottom: 10px; }
+    .footer-nav a {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .footer-nav a::before {
+      content: '';
+      display: inline-block;
+      width: 16px; height: 1px;
+      background: #c8302a;
+      flex-shrink: 0;
+      transition: width 0.2s;
+    }
+    .footer-nav a:hover { color: #fff; }
+    .footer-nav a:hover::before { width: 24px; }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 20px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.06em;
+    }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: #fff; }
+
+    /* ===== VISUAL PLACEHOLDER (SVG fills) ===== */
+    .vis-hero-1 { background: linear-gradient(135deg, #1a3a5c 0%, #2d6a9f 100%); }
+    .vis-hero-2 { background: linear-gradient(135deg, #2a1a0a 0%, #6a3d1a 100%); }
+    .vis-hero-3 { background: linear-gradient(135deg, #0a1a0a 0%, #1a4a1a 100%); }
+    .vis-about { background: linear-gradient(120deg, #2a2a2a 0%, #4a4a4a 100%); }
+    .vis-svc-1 { background: linear-gradient(135deg, #1a2a3a 0%, #2a4a6a 100%); }
+    .vis-svc-2 { background: linear-gradient(135deg, #2a1a0a 0%, #5a3a1a 100%); }
+    .vis-svc-3 { background: linear-gradient(135deg, #0a1a2a 0%, #1a3a5a 100%); }
+    .vis-work-1 { background: linear-gradient(135deg, #3a3a3a 0%, #5a5a5a 100%); }
+    .vis-work-2 { background: linear-gradient(135deg, #2a3a2a 0%, #4a6a4a 100%); }
+    .vis-work-3 { background: linear-gradient(135deg, #3a2a2a 0%, #6a4a4a 100%); }
+
+    .vis-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.25);
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      pointer-events: none;
+    }
+
+    /* ===== MOBILE NAV ===== */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 72px;
+      left: 0; right: 0; bottom: 0;
+      background: #fff;
+      overflow-y: auto;
+      z-index: 999;
+      padding: 24px;
+    }
+    .mobile-nav.open { display: block; }
+    .mobile-nav > ul > li { border-bottom: 1px solid #eee; }
+    .mobile-nav > ul > li > a {
+      display: block;
+      padding: 16px 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    .mobile-nav .sub-items { padding-bottom: 8px; }
+    .mobile-nav .sub-items a {
+      display: block;
+      padding: 10px 16px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .about-grid { grid-template-columns: 1fr; gap: 48px; }
+      .about-visual { max-width: 480px; }
+      .company-grid { grid-template-columns: 1fr; gap: 48px; }
+      .cta-inner { grid-template-columns: 1fr; gap: 40px; }
+      .footer-main { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .global-nav, .header-cta { display: none; }
+      .hamburger { display: flex; }
+      #hero { margin-top: 72px; }
+      .hero-content { padding: 0 28px; }
+      .hero-indicators { left: 28px; }
+      .scroll-hint { right: 28px; }
+      .section { padding: 64px 0; }
+      .section-inner { padding: 0 20px; }
+      .service-grid { grid-template-columns: 1fr; }
+      .numbers-grid { grid-template-columns: 1fr 1fr; }
+      .works-grid { grid-template-columns: 1fr; }
+      .cert-list { grid-template-columns: 1fr; }
+      .footer-main { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header id="header">
+  <div class="header-inner">
+    <a href="#" class="logo-area">
+      <div class="logo-mark"><span>平</span></div>
+      <div class="logo-text">
+        <div class="company-ja">株式会社平田建設</div>
+        <div class="company-en">Hirata Construction Co., Ltd.</div>
+      </div>
+    </a>
+
+    <nav class="global-nav">
+      <ul>
+        <li>
+          <a href="#about">企業情報</a>
+          <ul class="dropdown">
+            <li><a href="#about">会社概要</a></li>
+            <li><a href="#company">沿革・許可</a></li>
+            <li><a href="#certification">資格・認定</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#services">事業案内</a>
+          <ul class="dropdown">
+            <li><a href="#services">建築工事</a></li>
+            <li><a href="#services">土木工事</a></li>
+            <li><a href="#services">舗装工事</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#works">施工実績</a>
+          <ul class="dropdown">
+            <li><a href="#works">建築実績</a></li>
+            <li><a href="#works">土木実績</a></li>
+            <li><a href="#works">公共工事</a></li>
+          </ul>
+        </li>
+        <li><a href="#company">会社情報</a></li>
+        <li><a href="#contact-cta">採用情報</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-cta">
+      <a href="tel:0964222028" class="btn-contact">お問い合わせ</a>
+    </div>
+
+    <div class="hamburger" id="hamburgerBtn" onclick="toggleMobileNav()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Nav -->
+<nav class="mobile-nav" id="mobileNav">
+  <ul>
+    <li>
+      <a href="#about">企業情報</a>
+      <div class="sub-items">
+        <a href="#about">会社概要</a>
+        <a href="#company">沿革・許可</a>
+        <a href="#certification">資格・認定</a>
+      </div>
+    </li>
+    <li><a href="#services">事業案内</a></li>
+    <li><a href="#works">施工実績</a></li>
+    <li><a href="#company">会社情報</a></li>
+    <li><a href="#contact-cta">採用情報</a></li>
+    <li><a href="tel:0964222028" style="color:#c8302a;padding:20px 0;display:block;font-weight:700;">☎ 0964-22-2028</a></li>
+  </ul>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <div class="hero-slides">
+    <div class="hero-slide active" id="slide-0">
+      <div class="hero-slide-bg vis-hero-1" style="width:100%;height:100%;"></div>
+    </div>
+    <div class="hero-slide" id="slide-1">
+      <div class="hero-slide-bg vis-hero-2" style="width:100%;height:100%;"></div>
+    </div>
+    <div class="hero-slide" id="slide-2">
+      <div class="hero-slide-bg vis-hero-3" style="width:100%;height:100%;"></div>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-label">Hirata Construction Co., Ltd.</div>
+    <h1 class="hero-title-ja">
+      地域の暮らしを<br>
+      <span>支える</span>建設会社
+    </h1>
+    <p class="hero-sub">
+      昭和20年の創業以来、熊本県宇土市を拠点に<br>
+      地域の安心・安全な暮らしを守り続けています。
+    </p>
+    <a href="#about" class="hero-btn">私たちについて</a>
+  </div>
+
+  <div class="hero-indicators">
+    <div class="hero-dot active" onclick="goToSlide(0)"></div>
+    <div class="hero-dot" onclick="goToSlide(1)"></div>
+    <div class="hero-dot" onclick="goToSlide(2)"></div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ===== NEWS TICKER ===== -->
+<div id="news-ticker">
+  <div class="ticker-inner">
+    <div class="ticker-label">News</div>
+    <div class="ticker-scroll">
+      <div class="ticker-track">
+        <div class="ticker-item">
+          <span class="ticker-date">2026.05.01</span>
+          <a href="#">2026年度 定期採用情報を公開いたしました</a>
+        </div>
+        <div class="ticker-item">
+          <span class="ticker-date">2026.03.15</span>
+          <a href="#">宇土市内・大型公共施設の施工が完了しました</a>
+        </div>
+        <div class="ticker-item">
+          <span class="ticker-date">2026.01.10</span>
+          <a href="#">年始のご挨拶および業務開始のお知らせ</a>
+        </div>
+        <div class="ticker-item">
+          <span class="ticker-date">2025.11.20</span>
+          <a href="#">安全大会を実施いたしました</a>
+        </div>
+        <!-- duplicate for loop -->
+        <div class="ticker-item">
+          <span class="ticker-date">2026.05.01</span>
+          <a href="#">2026年度 定期採用情報を公開いたしました</a>
+        </div>
+        <div class="ticker-item">
+          <span class="ticker-date">2026.03.15</span>
+          <a href="#">宇土市内・大型公共施設の施工が完了しました</a>
+        </div>
+        <div class="ticker-item">
+          <span class="ticker-date">2026.01.10</span>
+          <a href="#">年始のご挨拶および業務開始のお知らせ</a>
+        </div>
+        <div class="ticker-item">
+          <span class="ticker-date">2025.11.20</span>
+          <a href="#">安全大会を実施いたしました</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ABOUT ===== -->
+<section id="about" class="section" style="background:#fafafa;">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-visual">
+        <div class="about-img-main vis-about">
+          <div class="vis-label">HIRATA CONSTRUCTION</div>
+        </div>
+        <div class="about-img-accent">
+          <div class="about-accent-text">
+            <div class="year">80</div>
+            <div class="year-label">years of trust</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-content">
+        <p class="about-lead">About Us</p>
+        <h2 class="about-catch">
+          地域に根ざし、<br>
+          未来を築く。
+        </h2>
+        <p class="about-body">
+          昭和20年5月の創業から80年以上にわたり、株式会社平田建設は熊本県宇土市を拠点として、地域の皆様の暮らしを支えてまいりました。<br><br>
+          建築・土木・舗装など幅広い工事に対応し、特定建設業者として地域インフラの整備に貢献しています。これからも「地域の暮らしを支える建設会社でありたい」という創業の想いを胸に、安心・安全・誠実な施工を続けてまいります。
+        </p>
+        <a href="#company" class="about-btn">会社概要を見る</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SERVICES ===== -->
+<section id="services" class="section" style="background:#fff;">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Services</div>
+      <h2 class="section-title">事業案内</h2>
+      <div class="section-title-en">Business Areas</div>
+    </div>
+  </div>
+  <div class="service-grid" style="max-width:1200px;margin:0 auto;">
+    <div class="service-card">
+      <div class="service-card-bg vis-svc-1" style="height:100%;">
+        <div class="vis-label">建築工事現場</div>
+      </div>
+      <div class="service-overlay">
+        <div class="service-num">01</div>
+        <div class="service-name">建築工事</div>
+        <div class="service-name-en">Architecture</div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card">
+      <div class="service-card-bg vis-svc-2" style="height:100%;">
+        <div class="vis-label">土木工事現場</div>
+      </div>
+      <div class="service-overlay">
+        <div class="service-num">02</div>
+        <div class="service-name">土木工事</div>
+        <div class="service-name-en">Civil Engineering</div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card">
+      <div class="service-card-bg vis-svc-3" style="height:100%;">
+        <div class="vis-label">舗装工事現場</div>
+      </div>
+      <div class="service-overlay">
+        <div class="service-num">03</div>
+        <div class="service-name">舗装・その他</div>
+        <div class="service-name-en">Paving &amp; More</div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+  </div>
+  <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:2px;">
+      <div style="padding:24px;background:#f8f8f8;border-left:3px solid #c8302a;">
+        <p style="font-size:13px;color:#555;line-height:1.9;">
+          建築工事業・屋根工事業・内装仕上工事業・防水工事業・建具工事業など、建築に関わる幅広い工事に対応します。
+        </p>
+      </div>
+      <div style="padding:24px;background:#f8f8f8;border-left:3px solid #c8302a;">
+        <p style="font-size:13px;color:#555;line-height:1.9;">
+          土木工事一式・とび・土木工事業・水道施設工事業など、地域インフラを支える土木工事を担います。
+        </p>
+      </div>
+      <div style="padding:24px;background:#f8f8f8;border-left:3px solid #c8302a;">
+        <p style="font-size:13px;color:#555;line-height:1.9;">
+          舗装工事業・解体工事業など、地域の道路整備から建物の解体まで幅広く対応いたします。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NUMBERS ===== -->
+<section id="numbers" class="section" style="padding:80px 0;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 40px 48px;">
+    <div class="section-label" style="color:#e8a020;">Our Numbers</div>
+    <h2 class="section-title" style="color:#fff;">数字で見る平田建設</h2>
+  </div>
+  <div class="numbers-grid" style="max-width:1200px;margin:0 auto;">
+    <div class="number-item">
+      <div class="number-val">80<span class="number-unit" style="font-size:28px;">+</span></div>
+      <div class="number-label">創業からの年数</div>
+      <div class="number-label-en">Years of Experience</div>
+    </div>
+    <div class="number-item">
+      <div class="number-val">2000<span class="number-unit" style="font-size:20px;">万円</span></div>
+      <div class="number-label">資本金</div>
+      <div class="number-label-en">Capital</div>
+    </div>
+    <div class="number-item">
+      <div class="number-val">10<span class="number-unit" style="font-size:28px;">+</span></div>
+      <div class="number-label">対応工事業種</div>
+      <div class="number-label-en">Business Types</div>
+    </div>
+    <div class="number-item">
+      <div class="number-val">8<span class="number-unit" style="font-size:28px;">名</span></div>
+      <div class="number-label">有資格技術者</div>
+      <div class="number-label-en">Certified Engineers</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WORKS ===== -->
+<section id="works" class="section" style="background:#f5f5f5;">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Works</div>
+      <h2 class="section-title">施工実績</h2>
+      <div class="section-title-en">Project Portfolio</div>
+    </div>
+    <div class="works-grid">
+      <div class="work-card">
+        <div class="work-img vis-work-1">
+          <div class="vis-label">建築工事</div>
+          <div class="work-tag">建築工事</div>
+        </div>
+        <div class="work-body">
+          <div class="work-title">宇土市内 公共施設 新築工事</div>
+          <div class="work-meta">熊本県宇土市 / 2025年</div>
+        </div>
+      </div>
+      <div class="work-card">
+        <div class="work-img vis-work-2">
+          <div class="vis-label">土木工事</div>
+          <div class="work-tag">土木工事</div>
+        </div>
+        <div class="work-body">
+          <div class="work-title">市道改良・舗装工事</div>
+          <div class="work-meta">熊本県宇土市 / 2024年</div>
+        </div>
+      </div>
+      <div class="work-card">
+        <div class="work-img vis-work-3">
+          <div class="vis-label">解体工事</div>
+          <div class="work-tag">解体・防水</div>
+        </div>
+        <div class="work-body">
+          <div class="work-title">既存建物 解体・防水改修工事</div>
+          <div class="work-meta">熊本県内 / 2024年</div>
+        </div>
+      </div>
+    </div>
+    <div class="section-more">
+      <a href="#" class="btn-more">施工実績をすべて見る</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COMPANY ===== -->
+<section id="company" class="section" style="background:#fff;">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Company</div>
+      <h2 class="section-title">会社情報</h2>
+      <div class="section-title-en">Corporate Information</div>
+    </div>
+    <div class="company-grid">
+      <div>
+        <table class="info-table">
+          <tr>
+            <th>商号</th>
+            <td>株式会社平田建設</td>
+          </tr>
+          <tr>
+            <th>創業</th>
+            <td>昭和20年5月（1945年）</td>
+          </tr>
+          <tr>
+            <th>資本金</th>
+            <td>2,000万円</td>
+          </tr>
+          <tr>
+            <th>所在地</th>
+            <td>〒869-0416<br>熊本県宇土市松山町966</td>
+          </tr>
+          <tr>
+            <th>電話</th>
+            <td><a href="tel:0964222028">0964-22-2028</a></td>
+          </tr>
+          <tr>
+            <th>メール</th>
+            <td><a href="mailto:k.hirata@io.ocn.ne.jp">k.hirata@io.ocn.ne.jp</a></td>
+          </tr>
+          <tr>
+            <th>建設業許可</th>
+            <td>熊本県知事許可(特-5)<br>第2268号</td>
+          </tr>
+          <tr>
+            <th>取引銀行</th>
+            <td>肥後銀行 / 熊本銀行<br>熊本信用組合 / 熊本信用金庫</td>
+          </tr>
+        </table>
+      </div>
+      <div class="company-map-area">
+        <div class="company-map-label">Access Map</div>
+        <div class="map-placeholder">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.0!2d130.65!3d32.68!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x354e6d4b00000001%3A0x0!2z5rGf5bO2!5e0!3m2!1sja!2sjp!4v1000000000000!5m2!1sja!2sjp"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="株式会社平田建設 地図">
+          </iframe>
+        </div>
+        <div class="company-access">
+          <p>
+            <strong>〒869-0416</strong><br>
+            熊本県宇土市松山町966<br>
+            ☎ <a href="tel:0964222028" style="color:#c8302a;">0964-22-2028</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CERTIFICATION ===== -->
+<section id="certification" class="section" style="background:#fafafa;">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Qualifications</div>
+      <h2 class="section-title">資格・認定</h2>
+      <div class="section-title-en">Certifications &amp; Licenses</div>
+    </div>
+    <div class="cert-list">
+      <div class="cert-item">
+        <div class="cert-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="cert-name">1級建築施工管理技士</div>
+        <div class="cert-detail">4名在籍<br>建築工事の現場管理を担う国家資格</div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 6l3 1m0 0l-3 9a5 5 0 006.959.895M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5 5 0 006.959.895M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+        </div>
+        <div class="cert-name">1級土木施工管理技士</div>
+        <div class="cert-detail">1名在籍<br>土木工事の現場管理を担う国家資格</div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M20.188 10.934l-1.385-.288a7.005 7.005 0 00-.467-1.127l.837-1.119a.5.5 0 00-.054-.664l-1.855-1.855a.5.5 0 00-.664-.054l-1.119.837a7.005 7.005 0 00-1.127-.467l-.288-1.385A.5.5 0 0013.5 4.5h-3a.5.5 0 00-.496.432l-.288 1.385a7.005 7.005 0 00-1.127.467l-1.119-.837a.5.5 0 00-.664.054L4.951 7.856a.5.5 0 00-.054.664l.837 1.119a7.005 7.005 0 00-.467 1.127l-1.385.288A.5.5 0 003.5 11.5v3a.5.5 0 00.432.496l1.385.288c.12.386.28.758.467 1.127l-.837 1.119a.5.5 0 00.054.664l1.855 1.855a.5.5 0 00.664.054l1.119-.837c.369.187.741.347 1.127.467l.288 1.385a.5.5 0 00.496.432h3a.5.5 0 00.496-.432l.288-1.385a7.005 7.005 0 001.127-.467l1.119.837a.5.5 0 00.664-.054l1.855-1.855a.5.5 0 00.054-.664l-.837-1.119c.187-.369.347-.741.467-1.127l1.385-.288A.5.5 0 0020.5 14.5v-3a.5.5 0 00-.312-.566z"/></svg>
+        </div>
+        <div class="cert-name">測量士</div>
+        <div class="cert-detail">1名在籍<br>測量業務を行う国家資格</div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div class="cert-name">2級建築士</div>
+        <div class="cert-detail">2名在籍<br>建築物の設計・工事監理を行う国家資格</div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <div class="cert-name">特定建設業許可</div>
+        <div class="cert-detail">熊本県知事許可(特-5)第2268号<br>大規模工事の元請けが可能</div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="cert-name">対応業種（10種以上）</div>
+        <div class="cert-detail">建築・土木・とび・舗装・防水<br>屋根・内装・建具・水道・解体</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT CTA ===== -->
+<section id="contact-cta">
+  <div class="cta-inner">
+    <div>
+      <div class="cta-label">Contact Us</div>
+      <h2 class="cta-title">
+        工事・施工に関する<br>
+        ご相談はお気軽に
+      </h2>
+      <p class="cta-sub">
+        建築・土木・舗装工事のご依頼から<br>
+        採用に関するご質問まで、<br>
+        お気軽にお問い合わせください。
+      </p>
+    </div>
+    <div class="cta-actions">
+      <div class="cta-tel-block">
+        <div class="cta-tel-label">Phone</div>
+        <div class="cta-tel">
+          <a href="tel:0964222028">0964-22-2028</a>
+        </div>
+        <div class="cta-tel-sub">平日 8:00〜17:00</div>
+      </div>
+      <a href="mailto:k.hirata@io.ocn.ne.jp" class="btn-form">
+        メールでのお問い合わせ
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer id="footer">
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="logo-area">
+        <div class="logo-mark"><span>平</span></div>
+      </div>
+      <div class="footer-company-name">株式会社平田建設</div>
+      <div class="footer-address">
+        〒869-0416<br>
+        熊本県宇土市松山町966<br>
+        TEL: 0964-22-2028<br>
+        創業: 昭和20年5月
+      </div>
+    </div>
+
+    <div>
+      <div class="footer-nav-title">Company</div>
+      <ul class="footer-nav">
+        <li><a href="#about">企業理念・沿革</a></li>
+        <li><a href="#company">会社概要</a></li>
+        <li><a href="#certification">資格・許可</a></li>
+        <li><a href="#contact-cta">採用情報</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-nav-title">Services</div>
+      <ul class="footer-nav">
+        <li><a href="#services">建築工事</a></li>
+        <li><a href="#services">土木工事</a></li>
+        <li><a href="#services">舗装工事</a></li>
+        <li><a href="#services">解体・その他工事</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-nav-title">Contact</div>
+      <ul class="footer-nav">
+        <li><a href="tel:0964222028">電話でお問い合わせ</a></li>
+        <li><a href="mailto:k.hirata@io.ocn.ne.jp">メールでお問い合わせ</a></li>
+        <li><a href="#works">施工実績</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,0.08);padding:20px 40px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;">
+    <div class="footer-copy">© 2026 株式会社平田建設 All Rights Reserved.</div>
+    <div class="footer-links">
+      <a href="#">プライバシーポリシー</a>
+      <a href="#">サイトマップ</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+  // Header scroll
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Hero slider
+  let current = 0;
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.hero-dot');
+
+  function goToSlide(n) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+
+  setInterval(() => {
+    goToSlide((current + 1) % slides.length);
+  }, 5000);
+
+  // Mobile nav
+  function toggleMobileNav() {
+    const nav = document.getElementById('mobileNav');
+    nav.classList.toggle('open');
+    const btn = document.getElementById('hamburgerBtn');
+    btn.classList.toggle('open');
+  }
+
+  // Close mobile nav on link click
+  document.querySelectorAll('.mobile-nav a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.getElementById('mobileNav').classList.remove('open');
+    });
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const offset = 72;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Intersection Observer for fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.work-card, .cert-item, .number-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
